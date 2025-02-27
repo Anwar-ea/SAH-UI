@@ -6,6 +6,7 @@ import { BaseRequestService } from "./api.service";
 export class ApplicationService extends BaseRequestService  {
     constructor(){
         super();
+        this.withCredentials = true;
     }
     controller: string = 'application';
 

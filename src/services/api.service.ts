@@ -4,7 +4,8 @@ export abstract class BaseRequestService {
     axios: Axios.AxiosInstance = axios.create({
         timeout: 30000, // Set a timeout for requests
 
-    });;
+    });
+    withCredentials: boolean = false;
     accessToken?: string;
     url: string = `${config?.backendUrl}/api/`;
 
@@ -22,7 +23,7 @@ export abstract class BaseRequestService {
                         if (this.accessToken) {
                             config.headers["Authorization"] = `Bearer ${this.accessToken}`;
                         }
-                        
+                        // config.withCredentials = this.withCredentials
                         if(contentType) config.headers['Content-Type'] = contentType; 
                         
                         if(headers) headers.forEach(x => {
@@ -52,10 +53,10 @@ export abstract class BaseRequestService {
         })
     }
 
-    protected post = async <TRequest = any, TResponse = any>(url: string, body: TRequest, headers?: Record<string, string>, options?: Axios.AxiosXHRConfigBase<TResponse>) => await this.axios.post<TResponse>(this.url + url, body, { ...options, headers});
-    protected get = async <TResponse = any>(url: string, headers?: Record<string, string>, options?: Axios.AxiosXHRConfigBase<TResponse>) => await this.axios.get<TResponse>(this.url + url, { ...options, headers});
-    protected put = async <TRequest = any, TResponse = any>(url: string, body: TRequest, headers?: Record<string, string>, options?: Axios.AxiosXHRConfigBase<TResponse>) => await this.axios.put<TResponse>(this.url + url, body, { ...options, headers});
-    protected delete = async <TResponse = any>(url: string, headers?: Record<string, string>, options?: Axios.AxiosXHRConfigBase<TResponse>) => await this.axios.delete<TResponse>(this.url + url, { ...options, headers});
+    protected post = async <TRequest = any, TResponse = any>(url: string, body: TRequest, headers?: Record<string, string>, options?: Axios.AxiosXHRConfigBase<TResponse>) => await this.axios.post<TResponse>(this.url + url, body, { ...options, headers, ...(!options?.withCredentials ? {withCredentials: this.withCredentials} : {})});
+    protected get = async <TResponse = any>(url: string, headers?: Record<string, string>, options?: Axios.AxiosXHRConfigBase<TResponse>) => await this.axios.get<TResponse>(this.url + url, { ...options, headers, ...(!options?.withCredentials ? {withCredentials: this.withCredentials} : {})});
+    protected put = async <TRequest = any, TResponse = any>(url: string, body: TRequest, headers?: Record<string, string>, options?: Axios.AxiosXHRConfigBase<TResponse>) => await this.axios.put<TResponse>(this.url + url, body, { ...options, headers, ...(!options?.withCredentials ? {withCredentials: this.withCredentials} : {})});
+    protected delete = async <TResponse = any>(url: string, headers?: Record<string, string>, options?: Axios.AxiosXHRConfigBase<TResponse>) => await this.axios.delete<TResponse>(this.url + url, { ...options, headers, ...(!options?.withCredentials ? {withCredentials: this.withCredentials} : {})});
 
 }
 

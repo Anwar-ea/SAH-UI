@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import { RouteObject } from "react-router-dom";
 import { AuthGuard } from "../../auth/AuthGuard";
 import Loader from "../../components/loader/Loader";
+import ApplicationAnalytics from "./application/analytics";
 const Dashboard = lazy(() => import('./dashboard/dashboard'))
 const Console = lazy(() => import('./console'))
 const Application = lazy(() => import('./application/application'))
@@ -49,6 +50,10 @@ export const dashboardRoutes: Array<RouteObject> = [
             {
               path: 'edit/:id',
               element: <Suspense fallback={<Loader/>}><ApplicationForm/></Suspense>
+            },
+            {
+              path: 'analytics/:appId',
+              element: <Suspense fallback={<Loader/>}><ApplicationAnalytics/></Suspense>
             }
           ]
         }

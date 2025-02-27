@@ -3,7 +3,7 @@ import React from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import HC_map from 'highcharts/modules/map';
-import { worldMapTopology } from '@/app/_constants/world-map-topology';
+import { worldMapTopology } from '../../models/world-map-topology';
 
 // Initialize the map module
 HC_map(Highcharts);

@@ -2,7 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-// :root {
+button{
+background-color: var(--background);
+background: -webkit-linear-gradient(to right, var(--dark), var(--accent-blue));
+background: linear-gradient(to right, var(--dark), var(--accent-blue));
+}// :root {
 //   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 //   line-height: 1.5;
 //   font-weight: 400;

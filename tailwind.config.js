@@ -1,14 +1,15 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
   ],
   corePlugins: {
-    preflight: false,
+    preflight: false, // Keep this false for Ant Design compatibility
   },
+  important: true, // This makes Tailwind styles have higher priority
   theme: {
     extend: {},
   },
   plugins: [],
 }
-

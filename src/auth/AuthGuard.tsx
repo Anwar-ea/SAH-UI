@@ -1,13 +1,18 @@
 import * as React from 'react';
-import { useNavigate, Navigate , Outlet} from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
+import { decrypt } from '../utility/crypto';
+import { IUser } from '../models/interfaces/Response/user';
+
 export interface IAuthGuardProps {
 }
 
 export function AuthGuard ({children}: any) {
-  let allowComponent = true;
+  let data: IUser | null = null;
+  let userDataFromLS = localStorage.getItem('common');
+  if(userDataFromLS) data = decrypt<IUser>(userDataFromLS);
 
-  if(!allowComponent){
-    return <Navigate to='/home' />;
+  if(!data){
+    return <Navigate to='/auth' />;
   }
 
   return  children;

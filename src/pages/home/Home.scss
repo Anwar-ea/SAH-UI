@@ -1,0 +1,41 @@
+@import '../../styles/variables.scss';
+
+.home-page {
+  padding: 40px 20px;
+  color: #FFFFFF;
+
+  /* Hero Section */
+  .hero-section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    text-align: center;
+  }
+
+  /* Divider */
+  .divider {
+    width: 80%;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2); /* Light gray divider */
+    margin: 40px auto;
+  }
+
+  /* Section */
+  .section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+  }
+
+  /* Button */
+  .ant-btn-primary {
+    background-color: #0D21A1;
+    border-color: #0D21A1;
+
+    &:hover {
+      background-color: #1a3bbf;
+      border-color: #1a3bbf;
+    }
+  }
+}

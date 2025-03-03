@@ -12,7 +12,8 @@ import {
   Collapse,
   Tag,
   Tooltip,
-  Alert
+  Alert,
+  Grid
 } from 'antd';
 import {
   CopyOutlined,
@@ -30,6 +31,7 @@ const { Title, Text, Paragraph } = Typography;
 const { TabPane } = Tabs;
 const { Panel } = Collapse;
 const { Option } = Select;
+const { useBreakpoint } = Grid;
 
 // Types for the API documentation
 interface ParamType {
@@ -66,7 +68,7 @@ interface ResponseFieldType {
 
 const  Developers: React.FC = () => {
   const [selectedLanguage, setSelectedLanguage] = useState<string>('curl');
-  
+  const screens = useBreakpoint(); // Hook to detect screen size
   const codeExamples = {
     curl: `curl -X GET "\${config.backendUrl}/api/analytics/get_analytics/app_12345" \\
   -H "x-api-key: your-api-key-here" \\
@@ -332,74 +334,99 @@ async function fetchAnalytics() {
   }
 }`;
 
-  return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <div className="flex items-center mb-6">
-        <ApiOutlined className="text-2xl mr-3 text-blue-500" />
-        <Title level={1} className="mb-0">Analytics API Documentation</Title>
-      </div>
-      
-      <Card className="mb-8 shadow-md">
-        <Title level={4}>Overview</Title>
-        <Paragraph>
-          The Analytics API allows you to retrieve detailed analytics data for your applications. 
-          This documentation provides comprehensive information on how to authenticate, make requests, 
-          and understand the responses from our Analytics API.
-        </Paragraph>
-        
-        <Alert 
-          message="Authentication Required" 
-          description="All API requests require your API key for authentication. Your API key can be found in your developer dashboard."
-          type="info" 
-          showIcon 
-          className="mb-4"
-        />
-        
-        <Title level={4}>Base URL</Title>
-        <div className="bg-gray-100 p-4 rounded-md flex justify-between items-center mb-4">
-          <code className="text-sm">${'{config.backendUrl}'}/api/analytics/get_analytics/${'{'}<span className="text-green-600">applicationId</span>{'}'}</code>
-          <CopyToClipboard text="${config.backendUrl}/api/analytics/get_analytics/${applicationId}" onCopy={() => copyText('URL')}>
-            <Button icon={<CopyOutlined />} size="small">Copy</Button>
-          </CopyToClipboard>
-        </div>
-        
-        <Divider />
-        
-        <Title level={4}>Authentication</Title>
-        <Text strong>API Key Header</Text>
-        <div className="bg-gray-100 p-4 rounded-md flex justify-between items-center mb-4">
-          <code className="text-sm">x-api-key: {'<your-api-key>'}</code>
-          <CopyToClipboard text="x-api-key: your-api-key" onCopy={() => copyText('Header')}>
-            <Button icon={<CopyOutlined />} size="small">Copy</Button>
-          </CopyToClipboard>
-        </div>
-        <Paragraph>Your API key should be kept secure and not shared publicly.</Paragraph>
-      </Card>
-      
-      <Tabs defaultActiveKey="1" type="card" className="api-doc-tabs">
-        <TabPane 
-          tab={
-            <span>
-              <FileTextOutlined />
-              Endpoints
-            </span>
-          } 
-          key="1"
+const customTabStyles = `
+  .custom-tabs .ant-tabs-tab:not(.ant-tabs-tab-active) .ant-tabs-tab-btn {
+    color: white !important;
+  }
+`;
+
+return (
+  <div className="container mx-auto px-4 py-8 max-w-6xl h-[800px] overflow-y-auto">
+    <style>{customTabStyles}</style>
+    <div className="flex items-center mb-6">
+      <ApiOutlined className="text-2xl mr-3 text-blue-500" />
+      <Title level={screens.xs ? 3 : 1} className="mb-0 mt-0 text-white">
+        Analytics API Documentation
+      </Title>
+    </div>
+
+    <Card className="mb-8 shadow-md">
+      <Title level={4}>Overview</Title>
+      <Paragraph>
+        The Analytics API allows you to retrieve detailed analytics data for your applications.
+        This documentation provides comprehensive information on how to authenticate, make requests,
+        and understand the responses from our Analytics API.
+      </Paragraph>
+
+      <Alert
+        message="Authentication Required"
+        description="All API requests require your API key for authentication. Your API key can be found in your developer dashboard."
+        type="info"
+        showIcon
+        className="mb-4"
+      />
+
+      <Title level={4}>Base URL</Title>
+      <div className="bg-gray-100 p-4 rounded-md flex justify-between items-center mb-4">
+        <code className="text-sm break-all">
+          ${'{config.backendUrl}'}/api/analytics/get_analytics/${'{'}
+          <span className="text-green-600">applicationId</span>
+          {'}'}
+        </code>
+        <CopyToClipboard
+          text="${config.backendUrl}/api/analytics/get_analytics/${applicationId}"
+          onCopy={() => copyText('URL')}
         >
-          <Card className="shadow-md">
-            <Space direction="vertical" size="large" className="w-full">
-              <div>
-                <div className="flex items-center">
-                  <Tag color="green" className="mr-2">GET</Tag>
-                  <Text strong className="text-lg">Analytics Data</Text>
-                </div>
-                <Paragraph className="ml-12">
-                  Retrieves comprehensive analytics data for a specific application.
-                </Paragraph>
+          <Button icon={<CopyOutlined />} size="small">
+            Copy
+          </Button>
+        </CopyToClipboard>
+      </div>
+
+      <Divider />
+
+      <Title level={4}>Authentication</Title>
+      <Text strong>API Key Header</Text>
+      <div className="bg-gray-100 p-4 rounded-md flex justify-between items-center mb-4">
+        <code className="text-sm break-all">x-api-key: {'<your-api-key>'}</code>
+        <CopyToClipboard text="x-api-key: your-api-key" onCopy={() => copyText('Header')}>
+          <Button icon={<CopyOutlined />} size="small">
+            Copy
+          </Button>
+        </CopyToClipboard>
+      </div>
+      <Paragraph>Your API key should be kept secure and not shared publicly.</Paragraph>
+    </Card>
+
+    <Tabs defaultActiveKey="1" type="card" className="api-doc-tabs custom-tabs">
+      <TabPane
+        tab={
+          <span>
+            <FileTextOutlined />
+            Endpoints
+          </span>
+        }
+        key="1"
+      >
+        <Card className="shadow-md">
+          <Space direction="vertical" size="large" className="w-full">
+            <div>
+              <div className="flex items-center">
+                <Tag color="green" className="mr-2">
+                  GET
+                </Tag>
+                <Text strong className="text-lg">
+                  Analytics Data
+                </Text>
               </div>
-              
-              <Divider orientation="left">Request Parameters</Divider>
-              <Table 
+              <Paragraph className="ml-12">
+                Retrieves comprehensive analytics data for a specific application.
+              </Paragraph>
+            </div>
+
+            <Divider orientation="left">Request Parameters</Divider>
+            <div className="overflow-x-auto">
+              <Table
                 dataSource={requestParams}
                 columns={[
                   {
@@ -418,7 +445,8 @@ async function fetchAnalytics() {
                     title: 'Required',
                     dataIndex: 'required',
                     key: 'required',
-                    render: (required) => required ? <Tag color="red">Yes</Tag> : <Tag color="green">No</Tag>
+                    render: (required) =>
+                      required ? <Tag color="red">Yes</Tag> : <Tag color="green">No</Tag>
                   },
                   {
                     title: 'Description',
@@ -430,9 +458,11 @@ async function fetchAnalytics() {
                 size="small"
                 bordered
               />
-              
-              <Divider orientation="left">Request Headers</Divider>
-              <Table 
+            </div>
+
+            <Divider orientation="left">Request Headers</Divider>
+            <div className="overflow-x-auto">
+              <Table
                 dataSource={requestHeaders}
                 columns={[
                   {
@@ -445,7 +475,8 @@ async function fetchAnalytics() {
                     title: 'Required',
                     dataIndex: 'required',
                     key: 'required',
-                    render: (required) => required ? <Tag color="red">Yes</Tag> : <Tag color="green">No</Tag>
+                    render: (required) =>
+                      required ? <Tag color="red">Yes</Tag> : <Tag color="green">No</Tag>
                   },
                   {
                     title: 'Description',
@@ -457,9 +488,11 @@ async function fetchAnalytics() {
                 size="small"
                 bordered
               />
-              
-              <Divider orientation="left">Optional Query Parameters</Divider>
-              <Table 
+            </div>
+
+            <Divider orientation="left">Optional Query Parameters</Divider>
+            <div className="overflow-x-auto">
+              <Table
                 dataSource={queryParams}
                 columns={[
                   {
@@ -490,48 +523,59 @@ async function fetchAnalytics() {
                 size="small"
                 bordered
               />
-              
-              <Divider orientation="left">Example Request</Divider>
-              <div className="mb-4">
-                <Select 
-                  value={selectedLanguage} 
-                  onChange={setSelectedLanguage}
-                  style={{ width: 150 }} 
-                  className="mb-2"
-                >
-                  <Option value="curl">cURL</Option>
-                  <Option value="javascript">JavaScript</Option>
-                  <Option value="python">Python</Option>
-                  <Option value="node">Node.js</Option>
-                </Select>
-                <div className="relative">
-                  <div className="bg-gray-900 text-white p-4 rounded-md overflow-auto max-h-96">
-                    <pre className="text-sm whitespace-pre-wrap">{codeExamples[selectedLanguage as keyof typeof codeExamples]}</pre>
-                  </div>
-                  <div className="absolute top-2 right-2">
-                    <CopyToClipboard text={codeExamples[selectedLanguage as keyof typeof codeExamples]} onCopy={() => copyText('Code')}>
-                      <Button icon={<CopyOutlined />} size="small">Copy</Button>
-                    </CopyToClipboard>
-                  </div>
+            </div>
+
+            <Divider orientation="left">Example Request</Divider>
+            <div className="mb-4">
+              <Select
+                value={selectedLanguage}
+                onChange={setSelectedLanguage}
+                style={{ width: 150 }}
+                className="mb-2"
+              >
+                <Option value="curl">cURL</Option>
+                <Option value="javascript">JavaScript</Option>
+                <Option value="python">Python</Option>
+                <Option value="node">Node.js</Option>
+              </Select>
+              <div className="relative">
+                <div className="bg-gray-900 text-white p-4 rounded-md overflow-auto max-h-96">
+                  <pre className="text-sm whitespace-pre-wrap break-all">
+                    {codeExamples[selectedLanguage as keyof typeof codeExamples]}
+                  </pre>
+                </div>
+                <div className="absolute top-2 right-2">
+                  <CopyToClipboard
+                    text={codeExamples[selectedLanguage as keyof typeof codeExamples]}
+                    onCopy={() => copyText('Code')}
+                  >
+                    <Button icon={<CopyOutlined />} size="small">
+                      Copy
+                    </Button>
+                  </CopyToClipboard>
                 </div>
               </div>
-              
-              <Divider orientation="left">Response Format</Divider>
-              <div className="mb-4">
-                <div className="relative">
-                  <div className="bg-gray-900 text-white p-4 rounded-md overflow-auto max-h-96">
-                    <pre className="text-sm whitespace-pre-wrap">{responseExample}</pre>
-                  </div>
-                  <div className="absolute top-2 right-2">
-                    <CopyToClipboard text={responseExample} onCopy={() => copyText('Response')}>
-                      <Button icon={<CopyOutlined />} size="small">Copy</Button>
-                    </CopyToClipboard>
-                  </div>
+            </div>
+
+            <Divider orientation="left">Response Format</Divider>
+            <div className="mb-4">
+              <div className="relative">
+                <div className="bg-gray-900 text-white p-4 rounded-md overflow-auto max-h-96">
+                  <pre className="text-sm whitespace-pre-wrap break-all">{responseExample}</pre>
+                </div>
+                <div className="absolute top-2 right-2">
+                  <CopyToClipboard text={responseExample} onCopy={() => copyText('Response')}>
+                    <Button icon={<CopyOutlined />} size="small">
+                      Copy
+                    </Button>
+                  </CopyToClipboard>
                 </div>
               </div>
-              
-              <Divider orientation="left">Response Fields</Divider>
-              <Table 
+            </div>
+
+            <Divider orientation="left">Response Fields</Divider>
+            <div className="overflow-x-auto">
+              <Table
                 dataSource={responseFields}
                 columns={[
                   {
@@ -540,7 +584,8 @@ async function fetchAnalytics() {
                     key: 'field',
                     render: (text, record) => (
                       <Text strong style={{ paddingLeft: record.nested ? 20 : 0 }}>
-                        {record.nested && '↳ '}{text}
+                        {record.nested && '↳ '}
+                        {text}
                       </Text>
                     )
                   },
@@ -560,9 +605,10 @@ async function fetchAnalytics() {
                 size="small"
                 bordered
               />
-            </Space>
-          </Card>
-        </TabPane>
+            </div>
+          </Space>
+        </Card>
+      </TabPane>
         
         <TabPane 
           tab={
